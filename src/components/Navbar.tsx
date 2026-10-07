@@ -52,15 +52,15 @@ export function Navbar() {
   }
 
   return (
-    <nav className="bg-white border-b border-gray-200 sticky top-0 z-50">
+    <nav className="bg-black border-b border-neutral-800 sticky top-0 z-50">
       <div className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
         <div className="flex items-center gap-6">
-          <Link href="/" className="text-lg font-bold text-brand-600">
+          <Link href="/" className="text-lg font-bold text-white tracking-tight uppercase">
             QuizCom
           </Link>
           <Link
             href="/modules"
-            className="text-sm text-gray-600 hover:text-gray-900"
+            className="text-sm text-neutral-400 hover:text-white transition-colors"
           >
             Modules
           </Link>
@@ -68,15 +68,15 @@ export function Navbar() {
 
         <div className="flex items-center gap-3">
           {loading ? (
-            <div className="w-20 h-8 bg-gray-100 rounded-lg animate-pulse" />
+            <div className="w-20 h-8 bg-neutral-800 rounded-lg animate-pulse" />
           ) : user ? (
             <>
-              <span className="text-sm text-gray-600">
+              <span className="text-sm text-neutral-400">
                 {user.display_name}
               </span>
               <button
                 onClick={handleLogout}
-                className="text-sm text-gray-500 hover:text-gray-700"
+                className="text-sm text-neutral-500 hover:text-white transition-colors"
               >
                 Logout
               </button>

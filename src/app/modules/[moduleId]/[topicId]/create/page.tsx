@@ -22,7 +22,9 @@ export default function CreateQuestionPage() {
 
   const [questionText, setQuestionText] = useState("");
   const [questionImage, setQuestionImage] = useState<File | null>(null);
-  const [questionImagePreview, setQuestionImagePreview] = useState<string | null>(null);
+  const [questionImagePreview, setQuestionImagePreview] = useState<
+    string | null
+  >(null);
   const [explanation, setExplanation] = useState("");
   const [options, setOptions] = useState<OptionDraft[]>([
     { text: "", imageFile: null, imagePreview: null, isCorrect: false },
@@ -48,7 +50,10 @@ export default function CreateQuestionPage() {
     );
   }
 
-  function handleOptionImage(index: number, e: React.ChangeEvent<HTMLInputElement>) {
+  function handleOptionImage(
+    index: number,
+    e: React.ChangeEvent<HTMLInputElement>
+  ) {
     const file = e.target.files?.[0];
     if (!file) return;
     updateOption(index, {
@@ -157,37 +162,40 @@ export default function CreateQuestionPage() {
 
   return (
     <div className="max-w-2xl mx-auto">
-      <div className="text-sm text-gray-500 mb-4">
-        <Link href="/modules" className="hover:text-brand-600">
+      <div className="text-sm text-neutral-500 mb-4">
+        <Link href="/modules" className="hover:text-white transition-colors">
           Modules
         </Link>
         <span className="mx-2">→</span>
-        <Link href={`/modules/${moduleId}`} className="hover:text-brand-600">
+        <Link
+          href={`/modules/${moduleId}`}
+          className="hover:text-white transition-colors"
+        >
           Module
         </Link>
         <span className="mx-2">→</span>
         <Link
           href={`/modules/${moduleId}/${topicId}`}
-          className="hover:text-brand-600"
+          className="hover:text-white transition-colors"
         >
           Topic
         </Link>
         <span className="mx-2">→</span>
-        <span className="text-gray-900 font-medium">New Question</span>
+        <span className="text-white font-medium">New Question</span>
       </div>
 
-      <h1 className="text-2xl font-bold mb-6">Create Question</h1>
+      <h1 className="text-2xl font-bold mb-6 text-white">Create Question</h1>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {error && (
-          <div className="bg-red-50 text-red-600 text-sm p-3 rounded-lg">
+          <div className="bg-red-900/20 text-red-400 text-sm p-3 rounded-lg">
             {error}
           </div>
         )}
 
         {/* Question text */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-neutral-300 mb-1">
             Question
           </label>
           <textarea
@@ -201,7 +209,7 @@ export default function CreateQuestionPage() {
 
         {/* Question image */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-neutral-300 mb-1">
             Question Image (optional)
           </label>
           <input
@@ -235,16 +243,16 @@ export default function CreateQuestionPage() {
               onClick={() => questionImageRef.current?.click()}
               className="btn-secondary text-sm"
             >
-              📷 Add Image
+              Add Image
             </button>
           )}
         </div>
 
         {/* Answer options */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-neutral-300 mb-2">
             Answer Options
-            <span className="text-gray-400 font-normal ml-2">
+            <span className="text-neutral-600 font-normal ml-2">
               (check correct answers — multiple allowed)
             </span>
           </label>
@@ -261,9 +269,9 @@ export default function CreateQuestionPage() {
                       onChange={(e) =>
                         updateOption(index, { isCorrect: e.target.checked })
                       }
-                      className="w-5 h-5 rounded text-green-500 border-gray-300 focus:ring-green-500"
+                      className="w-5 h-5 rounded text-green-500 border-neutral-600 bg-neutral-800 focus:ring-green-500"
                     />
-                    <span className="text-xs text-gray-500">Correct</span>
+                    <span className="text-xs text-neutral-500">Correct</span>
                   </label>
 
                   <div className="flex-1 space-y-2">
@@ -300,7 +308,7 @@ export default function CreateQuestionPage() {
                         </button>
                       </div>
                     ) : (
-                      <label className="inline-block text-xs text-brand-600 hover:underline cursor-pointer">
+                      <label className="inline-block text-xs text-neutral-400 hover:text-white cursor-pointer transition-colors">
                         + Add image
                         <input
                           type="file"
@@ -317,7 +325,7 @@ export default function CreateQuestionPage() {
                     <button
                       type="button"
                       onClick={() => removeOption(index)}
-                      className="text-gray-300 hover:text-red-500 mt-2"
+                      className="text-neutral-600 hover:text-red-400 mt-2 transition-colors"
                     >
                       ×
                     </button>
@@ -331,7 +339,7 @@ export default function CreateQuestionPage() {
             <button
               type="button"
               onClick={addOption}
-              className="text-sm text-brand-600 hover:underline mt-2"
+              className="text-sm text-neutral-400 hover:text-white mt-2 transition-colors"
             >
               + Add another option
             </button>
@@ -340,7 +348,7 @@ export default function CreateQuestionPage() {
 
         {/* Explanation */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-neutral-300 mb-1">
             Explanation (optional)
           </label>
           <textarea

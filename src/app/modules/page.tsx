@@ -52,7 +52,7 @@ export default function ModulesPage() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">Modules</h1>
+        <h1 className="text-2xl font-bold text-white">Modules</h1>
         {user && (
           <button
             onClick={() => setShowCreate(!showCreate)}
@@ -81,7 +81,11 @@ export default function ModulesPage() {
             placeholder="Short description (optional)"
           />
           <div className="flex gap-2">
-            <button type="submit" className="btn-primary text-sm" disabled={loading}>
+            <button
+              type="submit"
+              className="btn-primary text-sm"
+              disabled={loading}
+            >
               {loading ? "Creating..." : "Create"}
             </button>
             <button
@@ -100,13 +104,13 @@ export default function ModulesPage() {
           <Link
             key={mod.id}
             href={`/modules/${mod.id}`}
-            className="card p-5 hover:border-brand-300 transition-colors"
+            className="card p-5 hover:border-neutral-600 transition-colors"
           >
-            <h2 className="text-lg font-semibold text-gray-900">{mod.name}</h2>
+            <h2 className="text-lg font-semibold text-white">{mod.name}</h2>
             {mod.description && (
-              <p className="text-sm text-gray-500 mt-1">{mod.description}</p>
+              <p className="text-sm text-neutral-500 mt-1">{mod.description}</p>
             )}
-            <p className="text-xs text-gray-400 mt-2">
+            <p className="text-xs text-neutral-600 mt-2">
               by {mod.creator?.display_name || "Unknown"}
             </p>
           </Link>
@@ -114,7 +118,7 @@ export default function ModulesPage() {
       </div>
 
       {modules.length === 0 && (
-        <div className="card p-8 text-center text-gray-500">
+        <div className="card p-8 text-center text-neutral-500">
           No modules yet. Create the first one!
         </div>
       )}

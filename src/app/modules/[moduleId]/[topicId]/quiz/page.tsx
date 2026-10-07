@@ -46,17 +46,18 @@ export default function QuizPage() {
       .eq("topic_id", topicId)
       .order("created_at");
 
-    // Shuffle questions
+    // Shuffle questions AND options
     if (data) {
-      const shuffled = data.sort(() => Math.random() - 0.5);
+      const shuffled = [...data].sort(() => Math.random() - 0.5);
+      shuffled.forEach((q: any) => {
+        q.options = [...q.options].sort(() => Math.random() - 0.5);
+      });
       setQuestions(shuffled);
     }
   }
 
   const current = questions[currentIndex];
-  const sortedOptions = current
-    ? [...current.options].sort((a: any, b: any) => a.sort_order - b.sort_order)
-    : [];
+  const displayOptions = current ? current.options : [];
 
   function toggleOption(optionId: string) {
     if (submitted) return;
@@ -74,11 +75,12 @@ export default function QuizPage() {
 
     // Check if correct
     const correctIds = new Set(
-      sortedOptions.filter((o: any) => o.is_correct).map((o: any) => o.id)
+      displayOptions.filter((o: any) => o.is_correct).map((o: any) => o.id)
     );
     const isCorrect =
       selectedIds.size === correctIds.size &&
       Array.from(selectedIds).every((id) => correctIds.has(id));
+
     if (isCorrect) setScore((s) => s + 1);
 
     // Save attempt
@@ -103,7 +105,9 @@ export default function QuizPage() {
   }
 
   if (questions.length === 0) {
-    return <div className="text-center py-12 text-gray-500">Loading quiz...</div>;
+    return (
+      <div className="text-center py-12 text-neutral-500">Loading quiz...</div>
+    );
   }
 
   // Finished screen
@@ -114,11 +118,11 @@ export default function QuizPage() {
         <div className="text-6xl mb-4">
           {percentage >= 80 ? "🎉" : percentage >= 50 ? "💪" : "📚"}
         </div>
-        <h1 className="text-3xl font-bold mb-2">Quiz Complete!</h1>
-        <p className="text-lg text-gray-600 mb-1">
+        <h1 className="text-3xl font-bold mb-2 text-white">Quiz Complete!</h1>
+        <p className="text-lg text-neutral-400 mb-1">
           {score} / {questions.length} correct
         </p>
-        <div className="w-full bg-gray-200 rounded-full h-4 my-4 max-w-xs mx-auto">
+        <div className="w-full bg-neutral-800 rounded-full h-4 my-4 max-w-xs mx-auto">
           <div
             className={`h-4 rounded-full ${
               percentage >= 80
@@ -130,7 +134,7 @@ export default function QuizPage() {
             style={{ width: `${percentage}%` }}
           />
         </div>
-        <p className="text-2xl font-bold text-gray-900 mb-6">{percentage}%</p>
+        <p className="text-2xl font-bold text-white mb-6">{percentage}%</p>
         <div className="flex gap-3 justify-center">
           <button
             onClick={() => {
@@ -139,7 +143,14 @@ export default function QuizPage() {
               setFinished(false);
               setSubmitted(false);
               setSelectedIds(new Set());
-              setQuestions((q) => q.sort(() => Math.random() - 0.5));
+              setQuestions((prev) =>
+                [...prev]
+                  .sort(() => Math.random() - 0.5)
+                  .map((q: any) => ({
+                    ...q,
+                    options: [...q.options].sort(() => Math.random() - 0.5),
+                  }))
+              );
             }}
             className="btn-primary"
           >
@@ -160,15 +171,15 @@ export default function QuizPage() {
     <div className="max-w-2xl mx-auto">
       {/* Progress bar */}
       <div className="mb-6">
-        <div className="flex items-center justify-between text-sm text-gray-500 mb-2">
+        <div className="flex items-center justify-between text-sm text-neutral-500 mb-2">
           <span>{topic?.name}</span>
           <span>
             {currentIndex + 1} / {questions.length}
           </span>
         </div>
-        <div className="w-full bg-gray-200 rounded-full h-2">
+        <div className="w-full bg-neutral-800 rounded-full h-2">
           <div
-            className="bg-brand-500 h-2 rounded-full transition-all"
+            className="bg-white h-2 rounded-full transition-all"
             style={{
               width: `${((currentIndex + 1) / questions.length) * 100}%`,
             }}
@@ -178,7 +189,7 @@ export default function QuizPage() {
 
       {/* Question */}
       <div className="card p-6">
-        <p className="text-lg font-medium text-gray-900 mb-4">
+        <p className="text-lg font-medium text-white mb-4">
           {current.question_text}
         </p>
 
@@ -191,26 +202,27 @@ export default function QuizPage() {
         )}
 
         {/* Hint: multiple correct */}
-        {sortedOptions.filter((o: any) => o.is_correct).length > 1 && (
-          <p className="text-xs text-amber-600 bg-amber-50 px-3 py-1.5 rounded-lg mb-4">
+        {displayOptions.filter((o: any) => o.is_correct).length > 1 && (
+          <p className="text-xs text-amber-400 bg-amber-900/20 px-3 py-1.5 rounded-lg mb-4">
             Multiple correct answers possible
           </p>
         )}
 
         {/* Options */}
         <div className="space-y-2">
-          {sortedOptions.map((opt: any, i: number) => {
+          {displayOptions.map((opt: any, i: number) => {
             const letter = String.fromCharCode(65 + i);
             const isSelected = selectedIds.has(opt.id);
             const isCorrect = opt.is_correct;
 
-            let borderColor = "border-gray-200 hover:border-brand-300";
+            let optionStyle = "border-neutral-700 hover:border-neutral-500";
             if (submitted) {
-              if (isCorrect) borderColor = "border-green-400 bg-green-50";
-              else if (isSelected) borderColor = "border-red-400 bg-red-50";
-              else borderColor = "border-gray-200 bg-gray-50";
+              if (isCorrect) optionStyle = "border-green-600 bg-green-900/20";
+              else if (isSelected)
+                optionStyle = "border-red-600 bg-red-900/20";
+              else optionStyle = "border-neutral-800 bg-neutral-900/50";
             } else if (isSelected) {
-              borderColor = "border-brand-500 bg-brand-50";
+              optionStyle = "border-white bg-neutral-800";
             }
 
             return (
@@ -219,7 +231,7 @@ export default function QuizPage() {
                 type="button"
                 onClick={() => toggleOption(opt.id)}
                 disabled={submitted}
-                className={`w-full flex items-start gap-3 p-3 rounded-lg border text-left transition-colors ${borderColor}`}
+                className={`w-full flex items-start gap-3 p-3 rounded-lg border text-left transition-colors ${optionStyle}`}
               >
                 <span
                   className={`flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-sm font-medium ${
@@ -228,14 +240,20 @@ export default function QuizPage() {
                       : submitted && isSelected
                         ? "bg-red-500 text-white"
                         : isSelected
-                          ? "bg-brand-500 text-white"
-                          : "bg-gray-200 text-gray-600"
+                          ? "bg-white text-black"
+                          : "bg-neutral-800 text-neutral-400"
                   }`}
                 >
-                  {submitted ? (isCorrect ? "✓" : isSelected ? "×" : letter) : letter}
+                  {submitted
+                    ? isCorrect
+                      ? "✓"
+                      : isSelected
+                        ? "×"
+                        : letter
+                    : letter}
                 </span>
                 <div className="flex-1">
-                  <p className="text-sm">{opt.option_text}</p>
+                  <p className="text-sm text-neutral-200">{opt.option_text}</p>
                   {opt.option_image_url && (
                     <img
                       src={opt.option_image_url}
@@ -251,7 +269,7 @@ export default function QuizPage() {
 
         {/* Explanation after submit */}
         {submitted && current.explanation && (
-          <div className="mt-4 p-3 bg-blue-50 rounded-lg text-sm text-blue-800">
+          <div className="mt-4 p-3 bg-blue-900/20 rounded-lg text-sm text-blue-300">
             <span className="font-medium">Explanation:</span>{" "}
             {current.explanation}
           </div>

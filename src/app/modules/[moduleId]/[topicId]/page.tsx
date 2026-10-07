@@ -52,28 +52,33 @@ export default function TopicPage() {
   }
 
   if (!topic || !mod) {
-    return <div className="text-center py-12 text-gray-500">Loading...</div>;
+    return (
+      <div className="text-center py-12 text-neutral-500">Loading...</div>
+    );
   }
 
   return (
     <div>
       {/* Breadcrumb */}
-      <div className="text-sm text-gray-500 mb-4">
-        <Link href="/modules" className="hover:text-brand-600">
+      <div className="text-sm text-neutral-500 mb-4">
+        <Link href="/modules" className="hover:text-white transition-colors">
           Modules
         </Link>
         <span className="mx-2">→</span>
-        <Link href={`/modules/${moduleId}`} className="hover:text-brand-600">
+        <Link
+          href={`/modules/${moduleId}`}
+          className="hover:text-white transition-colors"
+        >
           {mod.name}
         </Link>
         <span className="mx-2">→</span>
-        <span className="text-gray-900 font-medium">{topic.name}</span>
+        <span className="text-white font-medium">{topic.name}</span>
       </div>
 
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold">{topic.name}</h1>
-          <p className="text-gray-500 text-sm mt-1">
+          <h1 className="text-2xl font-bold text-white">{topic.name}</h1>
+          <p className="text-neutral-500 text-sm mt-1">
             {questions.length} question{questions.length !== 1 && "s"}
           </p>
         </div>
@@ -83,7 +88,7 @@ export default function TopicPage() {
               href={`/modules/${moduleId}/${topicId}/quiz`}
               className="btn-secondary text-sm"
             >
-              🎯 Start Quiz
+              Start Quiz
             </Link>
           )}
           {user && (
@@ -111,12 +116,12 @@ export default function TopicPage() {
       </div>
 
       {questions.length === 0 && (
-        <div className="card p-8 text-center text-gray-500">
+        <div className="card p-8 text-center text-neutral-500">
           <p>No questions for this topic yet.</p>
           {user && (
             <Link
               href={`/modules/${moduleId}/${topicId}/create`}
-              className="text-brand-600 hover:underline mt-2 block"
+              className="text-white hover:underline mt-2 block"
             >
               Create the first question →
             </Link>
