@@ -78,8 +78,7 @@ export default function QuizPage() {
     );
     const isCorrect =
       selectedIds.size === correctIds.size &&
-      [...selectedIds].every((id) => correctIds.has(id));
-
+      Array.from(selectedIds).every((id) => correctIds.has(id));
     if (isCorrect) setScore((s) => s + 1);
 
     // Save attempt
@@ -87,7 +86,7 @@ export default function QuizPage() {
       await supabase.from("quiz_attempts").insert({
         user_id: user.id,
         question_id: current.id,
-        selected_option_ids: [...selectedIds],
+        selected_option_ids: Array.from(selectedIds),
         is_correct: isCorrect,
       });
     }
