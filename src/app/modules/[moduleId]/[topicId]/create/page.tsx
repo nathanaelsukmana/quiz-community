@@ -34,8 +34,36 @@ export default function CreateQuestionPage() {
   ]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [pasteText, setPasteText] = useState("");
 
   const questionImageRef = useRef<HTMLInputElement>(null);
+
+  function handlePaste() {
+    const text = pasteText.trim();
+    if (!text) return;
+
+    const lines = text.split("\n").map((l) => l.trim()).filter(Boolean);
+    if (lines.length < 2) return;
+
+    // First line = question, strip leading number like "3. "
+    const question = lines[0].replace(/^\d+[\.\)]\s*/, "");
+
+    // Remaining lines = options, strip leading "* ", "- ", "a) ", "A. ", etc.
+    const optionTexts = lines.slice(1).map((l) =>
+      l.replace(/^[\*\-•]\s*/, "").replace(/^[a-zA-Z][\.\)]\s*/, "")
+    );
+
+    setQuestionText(question);
+    setOptions(
+      optionTexts.slice(0, 8).map((t) => ({
+        text: t,
+        imageFile: null,
+        imagePreview: null,
+        isCorrect: false,
+      }))
+    );
+    setPasteText("");
+  }
 
   function handleQuestionImage(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -185,6 +213,31 @@ export default function CreateQuestionPage() {
       </div>
 
       <h1 className="text-2xl font-bold mb-6 text-white">Create Question</h1>
+
+      {/* Quick paste */}
+      <div className="card p-4 mb-6">
+        <label className="block text-sm font-medium text-neutral-300 mb-1">
+          Quick Paste
+          <span className="text-neutral-600 font-normal ml-2">
+            paste a formatted question to auto-fill
+          </span>
+        </label>
+        <textarea
+          value={pasteText}
+          onChange={(e) => setPasteText(e.target.value)}
+          className="input-field min-h-[100px] text-sm font-mono"
+          placeholder={"3. What is the capital of France?\n* London\n* Paris\n* Berlin\n* Madrid"}
+        />
+        {pasteText.trim() && (
+          <button
+            type="button"
+            onClick={handlePaste}
+            className="btn-primary text-sm mt-2"
+          >
+            Parse & Fill
+          </button>
+        )}
+      </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {error && (
